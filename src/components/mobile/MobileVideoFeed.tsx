@@ -13,7 +13,8 @@ const mockVideos = [
     likes: 125400,
     comments: 2340,
     shares: 891,
-    isLiked: false
+    isLiked: false,
+    avatar: '/placeholder.svg'
   },
   {
     id: 2,
@@ -24,7 +25,8 @@ const mockVideos = [
     likes: 89200,
     comments: 1567,
     shares: 456,
-    isLiked: true
+    isLiked: true,
+    avatar: '/placeholder.svg'
   },
   {
     id: 3,
@@ -35,7 +37,8 @@ const mockVideos = [
     likes: 203400,
     comments: 4521,
     shares: 1234,
-    isLiked: false
+    isLiked: false,
+    avatar: '/placeholder.svg'
   }
 ];
 

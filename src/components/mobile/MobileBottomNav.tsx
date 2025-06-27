@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Home, Search, Plus, User } from 'lucide-react';
+import { Home, Search, Plus, MessageCircle, User } from 'lucide-react';
 
 const MobileBottomNav = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -9,7 +9,7 @@ const MobileBottomNav = () => {
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'discover', icon: Search, label: 'Discover' },
     { id: 'create', icon: Plus, label: 'Create', isSpecial: true },
-    { id: 'inbox', icon: User, label: 'Inbox' },
+    { id: 'inbox', icon: MessageCircle, label: 'Inbox' },
     { id: 'profile', icon: User, label: 'Profile' }
   ];
 

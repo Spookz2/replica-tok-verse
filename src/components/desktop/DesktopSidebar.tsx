@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Home, Search, Plus, User } from 'lucide-react';
+import { Home, Search, Plus, MessageCircle, User } from 'lucide-react';
 
 const DesktopSidebar = () => {
   const [activeItem, setActiveItem] = useState('home');
@@ -41,6 +41,11 @@ const DesktopSidebar = () => {
         <button className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg mb-2 text-left bg-gradient-to-r from-tiktok-red to-tiktok-pink text-white font-medium">
           <Plus size={20} />
           <span>Upload</span>
+        </button>
+
+        <button className="w-full flex items-center space-x-3 px-3 py-3 rounded-lg mb-2 text-left text-tiktok-gray-400 hover:bg-tiktok-gray-900 hover:text-white">
+          <MessageCircle size={20} />
+          <span>Inbox</span>
         </button>
       </nav>
       
