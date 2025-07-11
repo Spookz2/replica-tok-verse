@@ -87,11 +87,31 @@ const MobileVideoFeed = () => {
   return (
     <div 
       ref={containerRef}
-      className="h-full relative overflow-hidden"
+      className="h-[100dvh] relative overflow-hidden bg-black"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Simple 2020 TikTok-style top nav */}
+      <div className="absolute top-0 left-0 right-0 z-20 bg-transparent">
+        <div className="flex items-center justify-center pt-12 pb-4 px-4">
+          <div className="flex items-center space-x-8">
+            <button 
+              onClick={() => setActiveTab('Following')}
+              className={`text-lg font-medium ${activeTab === 'Following' ? 'text-white' : 'text-gray-400'}`}
+            >
+              Following
+            </button>
+            <button 
+              onClick={() => setActiveTab('For You')}
+              className={`text-lg font-bold ${activeTab === 'For You' ? 'text-white border-b-2 border-white pb-1' : 'text-gray-400'}`}
+            >
+              For You
+            </button>
+          </div>
+        </div>
+      </div>
+      
       <div 
         className="h-full flex flex-col transition-transform duration-300 ease-out"
         style={{ transform: `translateY(-${currentIndex * 100}%)` }}
@@ -109,55 +129,6 @@ const MobileVideoFeed = () => {
             />
           </div>
         ))}
-      </div>
-      
-      {/* Top Navigation exactly like TikTok */}
-      <div className="absolute top-0 left-0 right-0 z-20 bg-transparent">
-        <div className="flex items-center justify-between px-4 pt-12 pb-4">
-          {/* Left side - LIVE button */}
-          <button className="flex items-center bg-black bg-opacity-20 rounded-full px-3 py-1.5">
-            <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-            <span className="text-white text-sm font-bold">LIVE</span>
-          </button>
-
-          {/* Center - Navigation tabs */}
-          <div className="flex items-center space-x-6">
-            <button 
-              onClick={() => setActiveTab('Explore')}
-              className={`text-lg font-semibold ${activeTab === 'Explore' ? 'text-white' : 'text-gray-400'}`}
-            >
-              Explore
-            </button>
-            <button 
-              onClick={() => setActiveTab('Following')}
-              className={`text-lg font-semibold ${activeTab === 'Following' ? 'text-white' : 'text-gray-400'}`}
-            >
-              Following
-            </button>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-              <button 
-                onClick={() => setActiveTab('DEALS FOR YOU')}
-                className={`text-sm font-semibold ${activeTab === 'DEALS FOR YOU' ? 'text-white' : 'text-gray-400'}`}
-              >
-                DEALS FOR YOU
-              </button>
-            </div>
-            <button 
-              onClick={() => setActiveTab('For You')}
-              className={`text-lg font-bold ${activeTab === 'For You' ? 'text-white border-b-2 border-white pb-1' : 'text-gray-400'}`}
-            >
-              For You
-            </button>
-          </div>
-
-          {/* Right side - Search button */}
-          <button className="p-2">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-        </div>
       </div>
     </div>
   );

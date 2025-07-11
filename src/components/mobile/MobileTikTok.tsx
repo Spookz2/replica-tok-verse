@@ -28,12 +28,14 @@ const MobileTikTok = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-tiktok-black">
+    <div className="h-[100dvh] flex flex-col bg-tiktok-black overflow-hidden">
       <div className="flex-1 overflow-hidden">
         {renderScreen()}
       </div>
       {(activeTab === 'home' || activeTab === 'discover' || activeTab === 'inbox' || activeTab === 'profile') && (
-        <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+        <div className="absolute bottom-0 left-0 right-0">
+          <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
       )}
     </div>
   );
