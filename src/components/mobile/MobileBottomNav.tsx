@@ -2,9 +2,12 @@
 import React, { useState } from 'react';
 import { Home, Search, Plus, MessageCircle, User } from 'lucide-react';
 
-const MobileBottomNav = () => {
-  const [activeTab, setActiveTab] = useState('home');
+interface MobileBottomNavProps {
+  onTabChange: (tab: string) => void;
+  activeTab: string;
+}
 
+const MobileBottomNav: React.FC<MobileBottomNavProps> = ({ onTabChange, activeTab }) => {
   const navItems = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'discover', icon: Search, label: 'Discover' },
@@ -24,7 +27,7 @@ const MobileBottomNav = () => {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => onTabChange(item.id)}
                 className="relative"
               >
                 <div className="w-12 h-8 bg-gradient-to-r from-tiktok-red to-tiktok-pink rounded-lg flex items-center justify-center">
@@ -37,7 +40,7 @@ const MobileBottomNav = () => {
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => onTabChange(item.id)}
               className={`flex flex-col items-center py-1 ${
                 isActive ? 'text-white' : 'text-tiktok-gray-400'
               }`}

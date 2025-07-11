@@ -1,43 +1,48 @@
 
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Eye, EyeOff } from 'lucide-react';
 
-interface AuthScreenProps {
-  onLogin: (user: any) => void;
-}
-
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  bio: string;
-  followers: number;
-  following: number;
-  likes: number;
-  videos: any[];
-}
-
-const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
-  const [isLogin, setIsLogin] = useState(true);
+const AuthScreen = ({ onLogin }: { onLogin: (user: any) => void }) => {
+  const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (isLogin) {
-      // Login logic
-      const users = JSON.parse(localStorage.getItem('tikTokUsers') || '[]');
-      const user = users.find((u: User) => 
+    if (isSignUp) {
+      if (formData.password !== formData.confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      const newUser = {
+        id: Date.now(),
+        username: formData.username,
+        email: formData.email,
+        avatar: '/placeholder.svg',
+        followers: 0,
+        following: 0,
+        likes: 0
+      };
+      
+      const existingUsers = JSON.parse(localStorage.getItem('tiktokUsers') || '[]');
+      existingUsers.push(newUser);
+      localStorage.setItem('tiktokUsers', JSON.stringify(existingUsers));
+      localStorage.setItem('currentUser', JSON.stringify(newUser));
+      
+      onLogin(newUser);
+    } else {
+      const existingUsers = JSON.parse(localStorage.getItem('tiktokUsers') || '[]');
+      const user = existingUsers.find((u: any) => 
         (u.username === formData.username || u.email === formData.username) && 
-        formData.password === 'password123' // Simple password for demo
+        u.password === formData.password
       );
       
       if (user) {
@@ -46,130 +51,122 @@ const AuthScreen: React.FC<AuthScreenProps> = ({ onLogin }) => {
       } else {
         alert('Invalid credentials');
       }
-    } else {
-      // Signup logic
-      if (formData.password !== formData.confirmPassword) {
-        alert('Passwords do not match');
-        return;
-      }
-      
-      const users = JSON.parse(localStorage.getItem('tikTokUsers') || '[]');
-      const existingUser = users.find((u: User) => 
-        u.username === formData.username || u.email === formData.email
-      );
-      
-      if (existingUser) {
-        alert('Username or email already exists');
-        return;
-      }
-      
-      const newUser: User = {
-        id: Date.now().toString(),
-        username: formData.username,
-        email: formData.email,
-        bio: 'New TikTok creator ✨',
-        followers: 0,
-        following: 0,
-        likes: 0,
-        videos: []
-      };
-      
-      users.push(newUser);
-      localStorage.setItem('tikTokUsers', JSON.stringify(users));
-      localStorage.setItem('currentUser', JSON.stringify(newUser));
-      onLogin(newUser);
     }
   };
 
   return (
-    <div className="min-h-screen bg-tiktok-black flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-tiktok-gray-900 border-tiktok-gray-800">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-white">
-            {isLogin ? 'Log in to TikTok' : 'Sign up for TikTok'}
-          </CardTitle>
-          <CardDescription className="text-tiktok-gray-400">
-            {isLogin ? 'Welcome back!' : 'Create your account to get started'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen bg-gradient-to-br from-tiktok-black via-tiktok-gray-900 to-tiktok-black flex flex-col">
+      {/* Animated Banner */}
+      <div className="relative h-32 bg-gradient-to-r from-tiktok-red via-tiktok-pink to-tiktok-red overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-pulse"></div>
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-white mb-2">TikTok</h1>
+            <p className="text-white/80 text-sm">Make Your Day</p>
+          </div>
+        </div>
+        {/* Floating elements */}
+        <div className="absolute top-4 left-8 w-3 h-3 bg-white/30 rounded-full animate-bounce"></div>
+        <div className="absolute bottom-6 right-12 w-2 h-2 bg-white/40 rounded-full animate-ping"></div>
+        <div className="absolute top-8 right-20 w-4 h-4 bg-white/20 rounded-full animate-pulse"></div>
+      </div>
+
+      {/* Form Container */}
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="w-full max-w-md bg-tiktok-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-tiktok-gray-700">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-white mb-2">
+              {isSignUp ? 'Join TikTok' : 'Welcome Back'}
+            </h2>
+            <p className="text-tiktok-gray-400">
+              {isSignUp ? 'Create your account to get started' : 'Sign in to continue'}
+            </p>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username" className="text-white">
-                {isLogin ? 'Username or Email' : 'Username'}
-              </Label>
-              <Input
-                id="username"
+            <div>
+              <input
                 type="text"
-                placeholder={isLogin ? 'Enter username or email' : 'Choose a username'}
+                placeholder="Username or Email"
                 value={formData.username}
                 onChange={(e) => setFormData({...formData, username: e.target.value})}
-                className="bg-tiktok-gray-800 border-tiktok-gray-700 text-white placeholder-tiktok-gray-400"
+                className="w-full px-4 py-3 bg-tiktok-gray-700 border border-tiktok-gray-600 rounded-lg text-white placeholder-tiktok-gray-400 focus:outline-none focus:ring-2 focus:ring-tiktok-pink"
                 required
               />
             </div>
-            
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-white">Email</Label>
-                <Input
-                  id="email"
+
+            {isSignUp && (
+              <div>
+                <input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder="Email"
                   value={formData.email}
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="bg-tiktok-gray-800 border-tiktok-gray-700 text-white placeholder-tiktok-gray-400"
+                  className="w-full px-4 py-3 bg-tiktok-gray-700 border border-tiktok-gray-600 rounded-lg text-white placeholder-tiktok-gray-400 focus:outline-none focus:ring-2 focus:ring-tiktok-pink"
                   required
                 />
               </div>
             )}
-            
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-white">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="Enter your password"
+
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="bg-tiktok-gray-800 border-tiktok-gray-700 text-white placeholder-tiktok-gray-400"
+                className="w-full px-4 py-3 bg-tiktok-gray-700 border border-tiktok-gray-600 rounded-lg text-white placeholder-tiktok-gray-400 focus:outline-none focus:ring-2 focus:ring-tiktok-pink pr-12"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-tiktok-gray-400 hover:text-white"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
-            
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword" className="text-white">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  placeholder="Confirm your password"
+
+            {isSignUp && (
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="Confirm Password"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                  className="bg-tiktok-gray-800 border-tiktok-gray-700 text-white placeholder-tiktok-gray-400"
+                  className="w-full px-4 py-3 bg-tiktok-gray-700 border border-tiktok-gray-600 rounded-lg text-white placeholder-tiktok-gray-400 focus:outline-none focus:ring-2 focus:ring-tiktok-pink pr-12"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-tiktok-gray-400 hover:text-white"
+                >
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             )}
-            
-            <Button 
-              type="submit" 
-              className="w-full bg-gradient-to-r from-tiktok-red to-tiktok-pink hover:from-red-600 hover:to-pink-600"
+
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-tiktok-red to-tiktok-pink text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity"
             >
-              {isLogin ? 'Log in' : 'Sign up'}
-            </Button>
+              {isSignUp ? 'Sign Up' : 'Sign In'}
+            </button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="text-tiktok-gray-400 hover:text-white transition-colors"
+              onClick={() => setIsSignUp(!isSignUp)}
+              className="text-tiktok-pink hover:text-tiktok-red transition-colors"
             >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
+              {isSignUp 
+                ? 'Already have an account? Sign In' 
+                : "Don't have an account? Sign Up"
+              }
             </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
