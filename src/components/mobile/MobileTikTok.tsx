@@ -4,6 +4,8 @@ import MobileVideoFeed from './MobileVideoFeed';
 import MobileBottomNav from './MobileBottomNav';
 import InboxScreen from '../InboxScreen';
 import ProfileScreen from '../ProfileScreen';
+import DiscoverScreen from '../DiscoverScreen';
+import CreateScreen from '../CreateScreen';
 
 const MobileTikTok = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -13,15 +15,13 @@ const MobileTikTok = () => {
       case 'home':
         return <MobileVideoFeed />;
       case 'discover':
-        return <MobileVideoFeed />;
+        return <DiscoverScreen onBack={() => setActiveTab('home')} />;
       case 'inbox':
         return <InboxScreen />;
       case 'profile':
         return <ProfileScreen />;
       case 'create':
-        return <div className="flex-1 bg-tiktok-black flex items-center justify-center">
-          <p className="text-white text-lg">Create Screen Coming Soon</p>
-        </div>;
+        return <CreateScreen onBack={() => setActiveTab('home')} />;
       default:
         return <MobileVideoFeed />;
     }
@@ -32,7 +32,9 @@ const MobileTikTok = () => {
       <div className="flex-1 overflow-hidden">
         {renderScreen()}
       </div>
-      <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      {(activeTab === 'home' || activeTab === 'discover' || activeTab === 'inbox' || activeTab === 'profile') && (
+        <MobileBottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      )}
     </div>
   );
 };

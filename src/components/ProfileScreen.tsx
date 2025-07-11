@@ -1,12 +1,20 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Plus, Star, Lock, Repeat, Share2, Heart, Grid3X3, Bookmark, UserPlus, Menu } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import EditProfileScreen from './EditProfileScreen';
 
 const ProfileScreen = () => {
   const [activeTab, setActiveTab] = useState('videos');
+  const [showEditProfile, setShowEditProfile] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>({});
   
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+  useEffect(() => {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
+  }, [showEditProfile]); // Refresh when edit screen closes
   
   const userVideos = [
     { id: 1, thumbnail: '/placeholder.svg', views: '7,381' },
@@ -24,6 +32,10 @@ const ProfileScreen = () => {
     { id: 'liked', icon: Heart, label: 'Liked' },
     { id: 'bookmarks', icon: Bookmark, label: 'Bookmarks' }
   ];
+
+  if (showEditProfile) {
+    return <EditProfileScreen onBack={() => setShowEditProfile(false)} />;
+  }
 
   return (
     <div className="h-full bg-tiktok-black text-white overflow-y-auto">
@@ -75,7 +87,7 @@ const ProfileScreen = () => {
 
         {/* Bio */}
         <p className="text-center text-tiktok-gray-300 mb-4">
-          main acc @{currentUser.username || 'user'}wtf
+          {currentUser.bio || `main acc @${currentUser.username || 'user'}wtf`}
         </p>
 
         {/* Action Buttons */}
@@ -84,7 +96,10 @@ const ProfileScreen = () => {
             <Star size={16} className="text-tiktok-red" />
             <span className="text-white font-medium">9+</span>
           </div>
-          <button className="bg-tiktok-gray-800 px-6 py-2 rounded-lg">
+          <button 
+            onClick={() => setShowEditProfile(true)}
+            className="bg-tiktok-gray-800 px-6 py-2 rounded-lg"
+          >
             <span className="text-white font-medium">Edit</span>
           </button>
         </div>
